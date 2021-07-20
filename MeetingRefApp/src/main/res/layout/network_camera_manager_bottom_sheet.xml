@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    app:behavior_hideable="true"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/bottom_sheet_tab"
+        android:layout_width="@dimen/bottom_sheet_tab_width"
+        android:layout_height="@dimen/bottom_sheet_tab_height"
+        android:layout_margin="@dimen/bottom_sheet_tab_margin"
+        android:background="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/network_camera_title_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/close_icon_margin"
+        android:layout_marginEnd="@dimen/close_icon_margin"
+        android:src="@drawable/close_icon"
+        android:contentDescription="@string/close_icon_cd"
+        android:foreground="?attr/selectableItemBackground"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/network_camera_title_tv"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:text="@string/network_camera_title"
+        android:textSize="@dimen/network_cam_bs_title_font_size"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/close_btn"
+        app:layout_constraintBottom_toTopOf="@id/add_network_camera_display_text_field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_network_camera_display_text_field"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/add_network_cam_margin"
+        android:hint="@string/add_network_camera"
+        app:layout_constraintTop_toBottomOf="@id/network_camera_title_tv"
+        app:layout_constraintBottom_toTopOf="@id/add_network_camera_url_text_field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_network_camera_button" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_network_camera_url_text_field"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/add_network_cam_margin"
+        android:layout_marginBottom="@dimen/add_network_cam_margin"
+        android:hint="@string/add_network_camera"
+        app:layout_constraintTop_toBottomOf="@id/add_network_camera_display_text_field"
+        app:layout_constraintBottom_toTopOf="@id/network_camera_recycler_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_network_camera_button" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/add_network_camera_button"
+        android:layout_width="@dimen/add_icon_size"
+        android:layout_height="@dimen/add_icon_size"
+        android:layout_marginEnd="@dimen/add_icon_margin"
+        android:src="@drawable/add_icon"
+        android:tint="@android:color/white"
+        android:contentDescription="@string/close_icon_cd"
+        android:background="@drawable/meeting_icon_background"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="@id/add_network_camera_display_text_field"
+        app:layout_constraintBottom_toBottomOf="@id/add_network_camera_url_text_field"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/network_camera_recycler_view"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="@dimen/match_constraint"
+        app:layout_constraintTop_toBottomOf="@id/add_network_camera_url_text_field"
+        app:layout_constraintBottom_toTopOf="@id/clear_network_camera_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/clear_network_camera_button"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/clear_network_camera_button_margin"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/clear_network_cameras"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/rose_red"
+        app:layout_constraintTop_toBottomOf="@id/network_camera_recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

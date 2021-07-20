@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/participant_abbv_name"
+        android:layout_width="@dimen/participant_abbv_name_dimen"
+        android:layout_height="@dimen/participant_abbv_name_dimen"
+        android:layout_margin="@dimen/participant_abbv_name_margin"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/meeting_icon_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"  />
+
+    <TextView
+        android:id="@+id/participant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/participant_abbv_name_margin"
+        android:gravity="start"
+        android:textSize="@dimen/participant_name_font_size"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/participant_abbv_name"
+        app:layout_constraintEnd_toStartOf="@id/toggle_audio_icon" />
+
+    <CheckBox
+        android:id="@+id/toggle_audio_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:foreground="@drawable/audio_icon"
+        android:foregroundGravity="center"
+        android:foregroundTint="@color/black"
+        android:clickable="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/participant_volume_slider" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/participant_volume_slider"
+        android:layout_width="@dimen/participant_volume_slider_width"
+        android:layout_height="wrap_content"
+        android:valueFrom="0"
+        android:valueTo="100"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

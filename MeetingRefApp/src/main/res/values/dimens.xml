@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="match_constraint">0dp</dimen>
+
+    <!-- CardView -->
+    <dimen name="cardview_elevation">5dp</dimen>
+    <dimen name="cardview_margin">20dp</dimen>
+    <dimen name="cardview_corner_radius">5dp</dimen>
+    <dimen name="cardview_inner_padding">10dp</dimen>
+    <dimen name="cardview_text_margin">5dp</dimen>
+
+    <dimen name="cardview_title_font_size">24sp</dimen>
+    <dimen name="cardview_subtitle_font_size">16sp</dimen>
+
+    <!-- Choose Devices Card -->
+    <dimen name="choose_devices_spinner_padding">10dp</dimen>
+    <dimen name="choose_devices_spinner_margin">10dp</dimen>
+
+    <!-- Join Meeting Card -->
+    <dimen name="join_meeting_edit_margin">10dp</dimen>
+    <dimen name="join_meeting_button_margin">20dp</dimen>
+    <dimen name="join_meeting_button_padding">20dp</dimen>
+    <dimen name="join_meeting_button_loading_padding">6dp</dimen>
+
+    <!-- Meeting Tools Bottom Sheet -->
+    <dimen name="floating_action_button_margin">20dp</dimen>
+    <dimen name="bottom_sheet_peek_height">134dp</dimen>
+
+    <dimen name="bottom_sheet_tab_height">2dp</dimen>
+    <dimen name="bottom_sheet_tab_width">80dp</dimen>
+    <dimen name="bottom_sheet_tab_margin">20dp</dimen>
+
+    <dimen name="meeting_tools_icon_background_dimen">24dp</dimen>
+    <dimen name="meeting_tools_icon_dimen">72dp</dimen>
+    <dimen name="call_settings_icon_dimen">48dp</dimen>
+    <dimen name="call_settings_spinner_margin">20dp</dimen>
+    <dimen name="meeting_tools_icon_hor_margin">5dp</dimen>
+    <dimen name="meeting_tools_icon_vert_margin">20dp</dimen>
+
+    <dimen name="manage_network_camera_padding">15dp</dimen>
+
+    <!-- Video Stream Card -->
+    <dimen name="video_stream_card_margin">10dp</dimen>
+
+    <dimen name="video_stream_button_margin">5dp</dimen>
+    <dimen name="video_stream_icon_dimen">48dp</dimen>
+
+    <!-- Site Info Dialog -->
+    <dimen name="title_tv_hor_margin">20dp</dimen>
+    <dimen name="title_tv_vert_margin">5dp</dimen>
+    <dimen name="site_info_checkbox_margin">20dp</dimen>
+    <dimen name="site_info_button_margin">10dp</dimen>
+
+    <!-- Bottom Sheets Shared -->
+    <dimen name="close_icon_margin">20dp</dimen>
+
+    <!-- Participant Bottom Sheet -->
+    <dimen name="attendee_bs_title_font_size">20sp</dimen>
+
+    <!-- Participant List Item -->
+    <dimen name="participant_abbv_name_dimen">48dp</dimen>
+    <dimen name="participant_abbv_name_margin">10dp</dimen>
+    <dimen name="participant_volume_slider_width">150dp</dimen>
+
+    <dimen name="participant_name_font_size">16sp</dimen>
+
+    <!-- Network Camera Bottom Sheet -->
+    <dimen name="add_icon_size">48dp</dimen>
+    <dimen name="add_icon_margin">15dp</dimen>
+
+    <dimen name="add_network_cam_margin">20dp</dimen>
+    <dimen name="network_cam_bs_title_font_size">20sp</dimen>
+    <dimen name="clear_network_camera_button_margin">20dp</dimen>
+
+    <!-- Network Camera List Item -->
+    <dimen name="network_camera_display_font_size">24sp</dimen>
+
+    <dimen name="network_camera_text_margin">16dp</dimen>
+    <dimen name="network_camera_url_font_size">16sp</dimen>
+</resources>
