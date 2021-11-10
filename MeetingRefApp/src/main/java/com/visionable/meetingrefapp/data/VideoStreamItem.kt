@@ -2,7 +2,7 @@ package com.visionable.meetingrefapp.data
 
 import com.visionable.meetingsdk.Participant
 import com.visionable.meetingsdk.VideoView
-import java.util.*
+import java.util.UUID
 
 /**
  * Data class that stores all of the relevant content for the [VideoRecyclerViewAdapter]

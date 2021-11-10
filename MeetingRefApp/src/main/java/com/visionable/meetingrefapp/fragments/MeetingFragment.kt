@@ -6,7 +6,12 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -16,22 +21,23 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.visionable.meetingsdk.MeetingSDK
-import com.visionable.meetingsdk.Participant
-import com.visionable.meetingsdk.interfaces.INotificationCallback
-import com.visionable.meetingsdk.interfaces.ISwitchCameraCallback
-import com.visionable.meetingrefapp.*
-import com.visionable.meetingrefapp.databinding.MeetingFragmentBinding
-import com.visionable.meetingrefapp.recyclerview.adapters.ParticipantRecyclerViewAdapter
-import com.visionable.meetingrefapp.recyclerview.adapters.VideoRecyclerViewAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.visionable.meetingrefapp.R
+import com.visionable.meetingrefapp.SdkListener
 import com.visionable.meetingrefapp.data.NetworkCameraItem
 import com.visionable.meetingrefapp.data.VideoStreamItem
+import com.visionable.meetingrefapp.databinding.MeetingFragmentBinding
 import com.visionable.meetingrefapp.recyclerview.adapters.NetworkCameraRecyclerViewAdapter
+import com.visionable.meetingrefapp.recyclerview.adapters.ParticipantRecyclerViewAdapter
+import com.visionable.meetingrefapp.recyclerview.adapters.VideoRecyclerViewAdapter
+import com.visionable.meetingsdk.MeetingSDK
+import com.visionable.meetingsdk.Participant
 import com.visionable.meetingsdk.VideoView
+import com.visionable.meetingsdk.interfaces.INotificationCallback
+import com.visionable.meetingsdk.interfaces.ISwitchCameraCallback
 
 /**
  * Meeting Fragment that holds all of the video stream cards, meeting tools bottom sheet, and
@@ -145,7 +151,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         var currIndex = 0
 
         // Use iterator to prevent ConcurrentModificationException
-        with (videoStreamList.iterator()) {
+        with(videoStreamList.iterator()) {
             while (this.hasNext()) {
                 if (this.next().participant.isLocal) {
                     this.remove()
@@ -323,7 +329,6 @@ class MeetingFragment : Fragment(), INotificationCallback {
                         )
                     }
                 }
-
             }
 
             override fun onCameraSwitchFailed() {
@@ -374,7 +379,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
      * Toggles local audio ON and makes some visual changes to progress flow
      */
     private fun launchLocalAudio() {
-        with (binding) {
+        with(binding) {
             val isInputEnabled = toggleLocalAudioInput(chooseDevicesLayout.audioInputSpinner.selectedItem.toString(), true)
             val isOutputEnabled = toggleLocalAudioOutput(chooseDevicesLayout.audioOutputSpinner.selectedItem.toString(), true)
 
@@ -411,7 +416,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
      * Toggles local video ON and makes some visual changes to progress flow
      */
     private fun launchLocalVideo() {
-        with (binding) {
+        with(binding) {
             val isCameraEnabled = MeetingSDK.enableVideoCapture(
                 chooseDevicesLayout.videoInputSpinner.selectedItem.toString(),
                 chooseDevicesLayout.videoCodecSpinner.selectedItem.toString()
@@ -492,7 +497,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         participantBottomSheetBehavior = BottomSheetBehavior.from(binding.participantsLayout.root)
         networkCameraBottomSheetBehavior = BottomSheetBehavior.from(binding.networkCameraManagerLayout.root)
 
-        with (binding) {
+        with(binding) {
             chooseDevicesLayout.apply {
                 videoInputSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     // Boolean is important to ensure `onItemSelected` is not fired without user input
@@ -731,8 +736,8 @@ class MeetingFragment : Fragment(), INotificationCallback {
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             binding.toggleBottomSheetIcon.visibility = View.VISIBLE
 
-                            if (meetingToolsBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN
-                                && binding.meetingToolsLayout.root.visibility == View.VISIBLE) {
+                            if (meetingToolsBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN &&
+                                binding.meetingToolsLayout.root.visibility == View.VISIBLE) {
 
                                 binding.toggleBottomSheetIcon.visibility = View.VISIBLE
                             } else {
@@ -756,7 +761,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         // Initial Bottom Sheet state
         networkCameraBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        with (binding.networkCameraManagerLayout) {
+        with(binding.networkCameraManagerLayout) {
             closeBtn.setOnClickListener {
                 networkCameraBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
@@ -804,7 +809,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
      * Hide Choose Devices dialog and display relevant Meeting Screen UI
      */
     private fun displayMeeting() {
-        with (binding) {
+        with(binding) {
             // Hide 'Choose Devices' card and show video displays
             chooseDevicesLayout.chooseDevicesCv.visibility = View.GONE
             enableInputsButton.visibility = View.GONE
@@ -856,7 +861,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
     }
 
     override fun participantVideoUpdated(p0: Participant?, p1: String?) {
-        println("Participant Video Updated: ${p0.toString()}")
+        println("Participant Video Updated: $p0")
     }
 
     override fun participantVideoViewCreated(p0: Participant?, p1: View?) {
@@ -887,7 +892,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
     }
 
     override fun participantVideoStreamSizeChanged(p0: Participant?, p1: String?) {
-        println("Participant Video Stream Size Changed: ${p0.toString()}")
+        println("Participant Video Stream Size Changed: $p0")
     }
 
     override fun participantRemoved(p0: Participant?) {
@@ -915,7 +920,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
-    override fun participantDidMute(p0: Participant?) {
+    private fun participantDidMute(p0: Participant?) {
         p0?.let { participant ->
             // Update Video Stream Bottom Sheet
             participant.videoStreamIds?.forEach { streamId ->
@@ -934,7 +939,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
-    override fun participantDidUnmute(p0: Participant?) {
+    private fun participantDidUnmute(p0: Participant?) {
         p0?.let { participant ->
             // Update Video Stream Bottom Sheet
             participant.videoStreamIds?.forEach { streamId ->
@@ -953,8 +958,13 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
-    override fun participantAmplitudeChanged(p0: Participant?, p1: Int) {
-        println("Participant Amplitude Changed: ${p0.toString()}")
+    override fun participantAmplitudeChanged(p0: Participant?, p1: Int, p2: Boolean) {
+        println("Participant Amplitude Changed: $p0")
+        if (p2) {
+            participantDidMute(p0)
+        } else {
+            participantDidUnmute(p0)
+        }
     }
 
     override fun inputMeterChanged(p0: Int) {
@@ -964,5 +974,4 @@ class MeetingFragment : Fragment(), INotificationCallback {
     override fun outputMeterChanged(p0: Int) {
         println("Output Meter Changed: $p0")
     }
-
 }

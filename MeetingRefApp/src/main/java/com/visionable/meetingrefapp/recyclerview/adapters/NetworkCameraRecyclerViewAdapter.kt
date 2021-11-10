@@ -31,15 +31,15 @@ class NetworkCameraRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: NetworkCameraRecyclerViewHolder, position: Int) {
-        with (holder.binding) {
-			networkCameraStreamList[position].displayName?.let {
-			    networkCameraDisplayName.visibility = View.VISIBLE
+        with(holder.binding) {
+            networkCameraStreamList[position].displayName?.let {
+                networkCameraDisplayName.visibility = View.VISIBLE
                 networkCameraDisplayName.text = it
             }
             networkCameraUrl.text = networkCameraStreamList[position].camURL
 
-			closeBtn.setOnClickListener {
-				disableNetworkVideo(position)
+            closeBtn.setOnClickListener {
+                disableNetworkVideo(position)
             }
         }
     }
@@ -54,5 +54,4 @@ class NetworkCameraRecyclerViewAdapter(
     override fun getItemCount(): Int {
         return networkCameraStreamList.size
     }
-
 }

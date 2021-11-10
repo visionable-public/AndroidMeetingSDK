@@ -1,17 +1,15 @@
 package com.visionable.meetingrefapp
 
-import android.annotation.SuppressLint
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
-import com.visionable.meetingsdk.MeetingSDK
 import com.visionable.meetingrefapp.databinding.MainActivityBinding
 import com.visionable.meetingrefapp.fragments.MeetingFragment
 import com.visionable.meetingrefapp.fragments.SetUpFragment
+import com.visionable.meetingsdk.MeetingSDK
 
 /**
  * Main Activity class that holds:
@@ -109,5 +107,4 @@ class MainActivity : AppCompatActivity(), SdkListener {
         super.onDestroy()
         MeetingSDK.destroySDK()
     }
-
 }

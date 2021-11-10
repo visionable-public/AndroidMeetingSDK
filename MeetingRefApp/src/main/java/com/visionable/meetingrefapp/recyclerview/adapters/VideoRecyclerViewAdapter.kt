@@ -17,8 +17,8 @@ import com.visionable.meetingrefapp.fragments.SiteInfoDialogFragment
  * @property activity -> [FragmentActivity]: Used to display the Site Info Dialog (Context needed)
  */
 class VideoRecyclerViewAdapter(
-	private val videoStreamList: List<VideoStreamItem>,
-	private val activity: FragmentActivity?
+    private val videoStreamList: List<VideoStreamItem>,
+    private val activity: FragmentActivity?
 ) : RecyclerView.Adapter<VideoRecyclerViewAdapter.VideoRecyclerViewHolder>() {
 
     init {
@@ -72,7 +72,7 @@ class VideoRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: VideoRecyclerViewHolder, position: Int) {
-        with (videoStreamList[position]) {
+        with(videoStreamList[position]) {
             holder.binding.apply {
                 // Determine whether the participant video has already been displayed
                 if (!isInitialized) {
@@ -120,5 +120,4 @@ class VideoRecyclerViewAdapter(
     override fun getItemViewType(position: Int): Int {
         return videoStreamList[position].uuid.mostSignificantBits.toInt()
     }
-
 }

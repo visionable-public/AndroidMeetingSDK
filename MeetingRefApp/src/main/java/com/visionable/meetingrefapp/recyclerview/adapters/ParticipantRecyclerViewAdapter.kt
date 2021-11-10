@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.Slider
-import com.visionable.meetingsdk.MeetingSDK
-import com.visionable.meetingsdk.Participant
 import com.visionable.meetingrefapp.databinding.ParticipantListItemBinding
 import com.visionable.meetingrefapp.fragments.MeetingFragment
+import com.visionable.meetingsdk.MeetingSDK
+import com.visionable.meetingsdk.Participant
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 /**
  * Custom [RecyclerView.Adapter] to display the participants present in the call
@@ -124,5 +124,4 @@ class ParticipantRecyclerViewAdapter(
             else -> null
         }
     }
-
 }

@@ -73,7 +73,7 @@ class SetUpFragment : Fragment() {
         }
 
         MeetingSDK.initializeMeeting(server, guid) { result ->
-            with (binding) {
+            with(binding) {
                 if (result) {
                     sdkListener?.joinMeeting(participantName)
                 } else {

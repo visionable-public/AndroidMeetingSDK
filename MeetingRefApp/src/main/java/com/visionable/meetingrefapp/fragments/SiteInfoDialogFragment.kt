@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.DialogFragment
-import com.visionable.meetingsdk.MeetingSDK
-import com.visionable.meetingrefapp.databinding.SiteInfoDialogBinding
 import com.visionable.meetingrefapp.data.VideoStreamItem
+import com.visionable.meetingrefapp.databinding.SiteInfoDialogBinding
+import com.visionable.meetingsdk.MeetingSDK
 
 /**
  * Site Info Dialog that displays all of the information for a specific
@@ -36,7 +36,7 @@ class SiteInfoDialogFragment(
             val streamId = participantInfo.videoView.streamId
 
             // Set Participant info
-            with (participantInfo.participant) {
+            with(participantInfo.participant) {
                 siteTv.setText(this.siteName)
                 deviceTv.setText(this.getDeviceName(streamId))
                 emailTv.setText(this.email)
@@ -66,7 +66,6 @@ class SiteInfoDialogFragment(
                     MeetingSDK.disableVideoStream(participantInfo.participant, streamId)
                 }
             }
-
         }
     }
 
