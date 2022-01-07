@@ -23,9 +23,9 @@ class SetUpFragment : Fragment() {
         private val TAG = SetUpFragment::class.java.canonicalName
 
         /* EDIT TEST VALUES HERE */
-        private const val TEST_NAME = ""
-        private const val TEST_SERVER = ""
-        private const val TEST_MEETING = ""
+        private const val TEST_NAME = "Pixel"
+        private const val TEST_SERVER = "mspears.visionable.io"
+        private const val TEST_MEETING = "0a43a7551-9975-46cf-915d-185a6d52dbc7"
         /* ********************* */
     }
 

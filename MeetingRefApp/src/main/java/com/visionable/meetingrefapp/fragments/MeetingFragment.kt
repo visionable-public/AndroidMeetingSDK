@@ -837,6 +837,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
 
     override fun participantAdded(p0: Participant?) {
         p0?.let { participant ->
+            Log.d(TAG,"ms participantAdded ${participant.siteName}")
             // Do not add local participant or duplicate participant
             if (!participant.isLocal && participant !in participantList) {
                 participantList.add(participant)
@@ -853,6 +854,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
 
     override fun participantVideoAdded(p0: Participant?, p1: String?) {
         p0?.let { participant ->
+            Log.d(TAG,"participantVideoAdded ${participant.siteName}")
             p1?.let { streamId ->
                 // Automatically enable video
                 MeetingSDK.enableVideoStream(participant, streamId)
@@ -861,11 +863,16 @@ class MeetingFragment : Fragment(), INotificationCallback {
     }
 
     override fun participantVideoUpdated(p0: Participant?, p1: String?) {
-        println("Participant Video Updated: $p0")
+        if (p0 != null) {
+            Log.d(TAG,"ms participantVideoUpdated: ${p0.siteName}")
+
+        }
     }
 
     override fun participantVideoViewCreated(p0: Participant?, p1: View?) {
+
         p0?.let { participant ->
+            Log.d(TAG,"participantVideoViewCreated ${participant.siteName}")
             (p1 as? VideoView)?.let { videoView ->
                 val newStream = VideoStreamItem(participant = participant, videoView = videoView)
                 if (participant.isLocal) {
@@ -880,7 +887,15 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
-    override fun participantVideoRemoved(p0: Participant?, p1: String?) {
+    override fun participantVideoRemoteLayoutChanged(p0: Participant?, p1: String?) {
+        Log.d(TAG,"participantVideoRemoteLayoutChanged ${p0?.siteName} streamID: $p1")
+
+    }
+
+    override fun participantVideoRemoved(p0: Participant?, p1: String?, p2: VideoView?) {
+        if (p0 != null) {
+            Log.d(TAG,"ms participantVideoRemoved ${p0.siteName}")
+        }
         p1?.let { streamId ->
             val index = videoStreamList.indexOfFirst { it.videoView.streamId == streamId }
 
@@ -891,13 +906,12 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
-    override fun participantVideoStreamSizeChanged(p0: Participant?, p1: String?) {
-        println("Participant Video Stream Size Changed: $p0")
-    }
 
     override fun participantRemoved(p0: Participant?) {
         p0?.let { participant ->
             // Remove all leftover streamIds
+            Log.d(TAG,"ms participantVideoRemoved ${participant.siteName}")
+
             participant.videoStreamIds?.forEach { streamId ->
                 val index = videoStreamList.indexOfFirst { it.videoView.streamId == streamId }
 
