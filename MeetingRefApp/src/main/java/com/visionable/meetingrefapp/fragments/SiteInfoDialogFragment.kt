@@ -39,7 +39,7 @@ class SiteInfoDialogFragment(
             with(participantInfo.participant) {
                 siteTv.setText(this.siteName)
                 deviceTv.setText(this.getDeviceName(streamId))
-                emailTv.setText(this.email)
+                emailTv.setText(this.uuid)
                 nameTv.setText(this.getSiteName(streamId))
                 codecTv.setText(this.getVideoCodec(streamId))
             }

@@ -981,6 +981,22 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
+    override fun binaryPlaybackEnded(p0: Long) {
+        println("binaryPlaybackEnded: $p0")
+    }
+
+    override fun binaryPlaybackFailed(p0: Long) {
+        println("binaryPlaybackFailed: $p0")
+    }
+
+    override fun videoError(p0: String?, p1: String?) {
+        println("videoError: $p0 $p1")
+    }
+
+    override fun screenShareCancelled() {
+        println("screenShareCancelled")
+    }
+
     override fun inputMeterChanged(p0: Int) {
         println("Input Meter Changed: $p0")
     }
