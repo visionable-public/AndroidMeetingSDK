@@ -1,0 +1,3 @@
+include ':MeetingSDK'
+include ':meetingrefapp'
+rootProject.name = "MeetingRefApp"

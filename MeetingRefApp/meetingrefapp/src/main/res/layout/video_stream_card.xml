@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/video_stream_cv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/video_stream_card_margin"
+    app:cardElevation="@dimen/cardview_elevation"
+    app:cardCornerRadius="@dimen/cardview_corner_radius">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        android:background="@color/black">
+
+        <FrameLayout
+            android:id="@+id/video_stream_container"
+            android:layout_width="@dimen/match_constraint"
+            android:layout_height="@dimen/match_constraint"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
+            android:id="@+id/video_stream_info_icon"
+            android:layout_width="@dimen/video_stream_icon_dimen"
+            android:layout_height="@dimen/video_stream_icon_dimen"
+            android:src="@drawable/stream_info_icon"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:background="@drawable/stream_info_icon_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/video_stream_mute_icon"
+            android:layout_width="@dimen/video_stream_icon_dimen"
+            android:layout_height="@dimen/video_stream_icon_dimen"
+            android:layout_marginHorizontal="@dimen/video_stream_button_margin"
+            android:paddingHorizontal="@dimen/video_stream_button_margin"
+            android:foreground="@drawable/audio_off_icon"
+            android:foregroundGravity="center"
+            android:background="@drawable/stream_info_icon_background"
+            android:contentDescription="@string/mute_icon_cd"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

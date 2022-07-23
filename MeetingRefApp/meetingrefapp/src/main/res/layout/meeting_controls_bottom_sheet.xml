@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/navy_blue"
+    android:visibility="gone"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/bottom_sheet_tab"
+        android:layout_width="@dimen/bottom_sheet_tab_width"
+        android:layout_height="@dimen/bottom_sheet_tab_height"
+        android:layout_margin="@dimen/bottom_sheet_tab_margin"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/icons_top_barrier"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/icons_top_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="toggle_video_icon, toggle_audio_icon, toggle_mic_icon, end_meeting_icon" />
+
+    <CheckBox
+        android:id="@+id/toggle_video_icon"
+        android:layout_width="@dimen/meeting_tools_icon_dimen"
+        android:layout_height="@dimen/meeting_tools_icon_dimen"
+        android:layout_marginVertical="@dimen/meeting_tools_icon_vert_margin"
+        android:layout_marginHorizontal="@dimen/meeting_tools_icon_hor_margin"
+        android:button="@null"
+        android:background="@drawable/meeting_icon_background"
+        android:foreground="@drawable/video_icon"
+        android:foregroundGravity="center"
+        app:layout_constraintBottom_toTopOf="@id/video_group_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/toggle_mic_icon" />
+
+    <CheckBox
+        android:id="@+id/toggle_mic_icon"
+        android:layout_width="@dimen/meeting_tools_icon_dimen"
+        android:layout_height="@dimen/meeting_tools_icon_dimen"
+        android:layout_marginVertical="@dimen/meeting_tools_icon_vert_margin"
+        android:layout_marginHorizontal="@dimen/meeting_tools_icon_hor_margin"
+        android:button="@null"
+        android:background="@drawable/meeting_icon_background"
+        android:foreground="@drawable/mic_icon"
+        android:foregroundGravity="center"
+        app:layout_constraintBottom_toTopOf="@id/video_group_divider"
+        app:layout_constraintStart_toEndOf="@id/toggle_video_icon"
+        app:layout_constraintEnd_toStartOf="@id/toggle_audio_icon"/>
+
+    <CheckBox
+        android:id="@+id/toggle_audio_icon"
+        android:layout_width="@dimen/meeting_tools_icon_dimen"
+        android:layout_height="@dimen/meeting_tools_icon_dimen"
+        android:layout_marginVertical="@dimen/meeting_tools_icon_vert_margin"
+        android:layout_marginHorizontal="@dimen/meeting_tools_icon_hor_margin"
+        android:button="@null"
+        android:background="@drawable/meeting_icon_background"
+        android:foreground="@drawable/audio_icon"
+        android:foregroundGravity="center"
+        app:layout_constraintBottom_toTopOf="@id/video_group_divider"
+        app:layout_constraintStart_toEndOf="@id/toggle_mic_icon"
+        app:layout_constraintEnd_toStartOf="@id/end_meeting_icon" />
+
+    <ImageButton
+        android:id="@+id/end_meeting_icon"
+        android:layout_width="@dimen/meeting_tools_icon_dimen"
+        android:layout_height="@dimen/meeting_tools_icon_dimen"
+        android:layout_marginVertical="@dimen/meeting_tools_icon_vert_margin"
+        android:layout_marginHorizontal="@dimen/meeting_tools_icon_hor_margin"
+        android:background="@drawable/end_call_icon_background"
+        android:src="@drawable/end_call_icon"
+        android:rotation="-134"
+        app:layout_constraintBottom_toTopOf="@id/video_group_divider"
+        app:layout_constraintStart_toEndOf="@id/toggle_audio_icon"
+        app:layout_constraintEnd_toStartOf="@id/call_settings_icon" />
+
+    <ImageButton
+        android:id="@+id/call_settings_icon"
+        android:layout_width="@dimen/call_settings_icon_dimen"
+        android:layout_height="@dimen/call_settings_icon_dimen"
+        android:layout_marginVertical="@dimen/meeting_tools_icon_vert_margin"
+        android:layout_marginHorizontal="@dimen/meeting_tools_icon_hor_margin"
+        android:background="@drawable/meeting_icon_background"
+        android:src="@drawable/call_settings_icon"
+        android:foregroundGravity="center"
+        app:layout_constraintTop_toTopOf="@id/end_meeting_icon"
+        app:layout_constraintBottom_toBottomOf="@id/end_meeting_icon"
+        app:layout_constraintStart_toEndOf="@id/end_meeting_icon"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/video_group_divider"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="1dp"
+        android:background="@color/light_grey"
+        app:layout_constraintBottom_toTopOf="@id/video_devices_text_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/video_devices_text_layout"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/call_settings_spinner_margin"
+        style="@style/Widget.TextInputLayout"
+        app:boxBackgroundColor="@color/white"
+        app:startIconDrawable="@drawable/video_change_icon"
+        app:layout_constraintTop_toBottomOf="@id/video_group_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/video_devices_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/video_input_device"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/video_codec_text_layout"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/call_settings_spinner_margin"
+        style="@style/Widget.TextInputLayout"
+        app:boxBackgroundColor="@color/white"
+        app:startIconDrawable="@drawable/video_codec_icon"
+        app:layout_constraintTop_toBottomOf="@id/video_devices_text_layout"
+        app:layout_constraintBottom_toTopOf="@id/screen_capture_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/video_codec_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/video_codec_device"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ToggleButton
+        android:id="@+id/screen_capture_button"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/call_settings_spinner_margin"
+        android:layout_marginHorizontal="@dimen/call_settings_spinner_margin"
+        android:background="@drawable/screen_capture_button"
+        android:textOn="@string/enable_screen_capture"
+        android:textOff="@string/disable_screen_capture"
+        app:layout_constraintTop_toBottomOf="@id/video_codec_text_layout"
+        app:layout_constraintBottom_toTopOf="@id/manage_network_camera_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/manage_network_camera_button"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/manage_network_camera_padding"
+        android:layout_marginBottom="@dimen/call_settings_spinner_margin"
+        android:layout_marginHorizontal="@dimen/call_settings_spinner_margin"
+        android:text="@string/manage_network_camera"
+        android:backgroundTint="@color/navy_blue_light"
+        app:layout_constraintTop_toBottomOf="@id/screen_capture_button"
+        app:layout_constraintBottom_toTopOf="@id/audio_input_group_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/audio_input_group_divider"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="1dp"
+        android:background="@color/light_grey"
+        app:layout_constraintTop_toBottomOf="@id/manage_network_camera_button"
+        app:layout_constraintBottom_toTopOf="@id/audio_input_text_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/audio_input_text_layout"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/call_settings_spinner_margin"
+        style="@style/Widget.TextInputLayout"
+        app:boxBackgroundColor="@color/white"
+        app:startIconDrawable="@drawable/mic_on_icon"
+        app:layout_constraintTop_toBottomOf="@id/audio_input_group_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/audio_input_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/audio_input_device"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/audio_output_text_layout"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/call_settings_spinner_margin"
+        style="@style/Widget.TextInputLayout"
+        app:boxBackgroundColor="@color/white"
+        app:startIconDrawable="@drawable/audio_on_icon"
+        app:layout_constraintTop_toBottomOf="@id/audio_input_text_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/audio_output_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/audio_output_device"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

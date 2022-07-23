@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
+    tools:context=".fragments.MeetingFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/meeting_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/choose_devices_layout"
+            android:layout_width="@dimen/match_constraint"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/cardview_margin"
+            layout="@layout/choose_devices_card"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/enable_inputs_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/enable_inputs_button"
+            android:layout_width="@dimen/match_constraint"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/join_meeting_button_padding"
+            android:layout_marginHorizontal="@dimen/join_meeting_button_margin"
+            android:text="@string/enable_inputs_title"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/navy_blue_light"
+            app:spinning_bar_color="@color/white"
+            app:spinning_bar_padding="@dimen/join_meeting_button_loading_padding"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toBottomOf="@id/choose_devices_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/video_grid_layout"
+            android:layout_width="@dimen/match_constraint"
+            android:layout_height="@dimen/match_constraint"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/toggle_bottom_sheet_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/floating_action_button_margin"
+        android:layout_gravity="bottom|end"
+        android:visibility="gone"
+        android:backgroundTint="@color/navy_blue"
+        android:contentDescription="@string/toggle_bottom_sheet_icon_cd"
+        app:srcCompat="@drawable/arrow_up_icon"
+        app:tint="@android:color/white" />
+
+    <include
+        android:id="@+id/participants_layout"
+        layout="@layout/participants_bottom_sheet" />
+
+    <include
+        android:id="@+id/meeting_tools_layout"
+        layout="@layout/meeting_controls_bottom_sheet" />
+
+    <include
+        android:id="@+id/network_camera_manager_layout"
+        layout="@layout/network_camera_manager_bottom_sheet" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
