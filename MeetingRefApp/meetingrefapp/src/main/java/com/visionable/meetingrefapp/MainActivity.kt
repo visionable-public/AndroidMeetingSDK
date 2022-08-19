@@ -1,6 +1,7 @@
 package com.visionable.meetingrefapp
 
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -63,8 +64,7 @@ class MainActivity : AppCompatActivity(), SdkListener {
             hide(meetingFragment)
         }
 
-        MeetingSDK.setNotificationCallback(meetingFragment)
-        MeetingSDK.setDelegate(meetingFragment)
+        MeetingSDK.setDelegate(null, Looper.getMainLooper())
         MeetingSDK.joinMeeting(participantName) { joined ->
             if (joined) {
                 // Remove SetUpFragment

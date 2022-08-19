@@ -136,12 +136,13 @@ class MeetingFragment : Fragment(), INotificationCallback {
             }
         }
 
-    private val uiThreadHandler = Handler(Looper.getMainLooper())
-
     // Enable participant menu icon
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        // Set as delegate
+        MeetingSDK.setDelegate(this,Looper.getMainLooper())
     }
 
     /**
@@ -901,15 +902,13 @@ class MeetingFragment : Fragment(), INotificationCallback {
             Log.d(TAG,"participantVideoViewCreated ${participant.displayName}")
             p1?.let { videoView ->
                 val newStream = VideoStreamItem(participant = participant, videoView = videoView)
-                uiThreadHandler.post {
-                    if (participant.isLocal) {
-                        // Adds local participant streams to first position in grid
-                        videoStreamList.add(0, newStream)
-                        binding.videoGridLayout.adapter?.notifyItemInserted(0)
-                    } else {
-                        videoStreamList.add(newStream)
-                        binding.videoGridLayout.adapter?.notifyItemInserted(videoStreamList.size - 1)
-                    }
+                if (participant.isLocal) {
+                    // Adds local participant streams to first position in grid
+                    videoStreamList.add(0, newStream)
+                    binding.videoGridLayout.adapter?.notifyItemInserted(0)
+                } else {
+                    videoStreamList.add(newStream)
+                    binding.videoGridLayout.adapter?.notifyItemInserted(videoStreamList.size - 1)
                 }
             }
         }
@@ -978,7 +977,6 @@ class MeetingFragment : Fragment(), INotificationCallback {
                     binding.videoGridLayout.adapter?.notifyItemChanged(index, INotificationCases.PARTICIPANT_MUTED)
                 }
             }
-
             // Update Attendee Bottom Sheet
             participantList.indexOf(participant).run {
                 binding.participantsLayout.participantRecyclerView.adapter?.notifyItemChanged(
