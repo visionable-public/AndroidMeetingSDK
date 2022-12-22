@@ -143,6 +143,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
 
         // Set as delegate
         MeetingSDK.setDelegate(this,Looper.getMainLooper())
+        MeetingSDK.enableInlineAudioVideoLogs(true)
     }
 
     /**
@@ -210,7 +211,6 @@ class MeetingFragment : Fragment(), INotificationCallback {
         setupNetworkCameraBottomSheet()
 
         getDevices()
-        MeetingSDK.showActiveSpeaker(true)
         return binding.root
     }
 
@@ -377,7 +377,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         if (isEnabled) {
             MeetingSDK.enableScreenCapture(
                 MeetingSDK.ANDROID_SCREEN_CAPTURE,
-                "VP8 Best Screen Capture"
+                "BEST SCREEN"
             )
         } else {
             MeetingSDK.disableScreenCapture()
@@ -788,7 +788,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
                     newNetworkCameraURL
                 )
 
-                if (MeetingSDK.enableNetworkVideo(newNetworkCameraURL, MeetingSDK.VP8_LARGE_NAME, newNetworkCameraDisplayName)) {
+                if (MeetingSDK.enableNetworkVideo(newNetworkCameraURL, MeetingSDK.LARGE_NAME, newNetworkCameraDisplayName)) {
                     // Add new camera item
                     networkCameraList.add(newNetworkCameraItem)
                     networkCameraRecyclerView.adapter?.notifyItemInserted(networkCameraList.size - 1)
