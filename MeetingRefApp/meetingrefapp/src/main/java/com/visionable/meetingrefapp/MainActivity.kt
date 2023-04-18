@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), SdkListener {
         supportActionBar?.setDisplayShowTitleEnabled(false) // Hide app title
 
         // Initializes the Visionable MeetingSDK that is bound to your application context
-        MeetingSDK.initializeSDK(this)
+        MeetingSDK.initializeSDK(this.getApplicationContext())
         // Navigate to [SetUpFragment]
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
