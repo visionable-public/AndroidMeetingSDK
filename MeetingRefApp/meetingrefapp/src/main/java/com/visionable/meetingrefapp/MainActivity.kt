@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), SdkListener {
             }
         }
 
-        MeetingSDK.enableInlineAudioVideoLogs(true)
+        MeetingSDK.enableCombinedLogs(true)
     }
 
     /**

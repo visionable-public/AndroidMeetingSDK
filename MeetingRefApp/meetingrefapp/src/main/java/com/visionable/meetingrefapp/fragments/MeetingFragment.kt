@@ -143,7 +143,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
 
         // Set as delegate
         MeetingSDK.setDelegate(this,Looper.getMainLooper())
-        MeetingSDK.enableInlineAudioVideoLogs(true)
+        MeetingSDK.enableCombinedLogs(true)
     }
 
     /**
