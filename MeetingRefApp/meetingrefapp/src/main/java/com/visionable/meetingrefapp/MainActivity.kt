@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), SdkListener {
         }
 
         MeetingSDK.enableCombinedLogs(true)
+        MeetingSDK.enableLogForwarding(true)
     }
 
     /**
