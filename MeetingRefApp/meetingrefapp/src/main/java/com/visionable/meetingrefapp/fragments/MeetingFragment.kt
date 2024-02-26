@@ -305,7 +305,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
      */
     private fun toggleLocalVideo(device: String = "", codec: String = "", isEnabled: Boolean): Boolean {
         return if (isEnabled) {
-            MeetingSDK.enableVideoCapture(device, codec)
+            MeetingSDK.enableVideoCapture(device, codec, true)
         } else {
             MeetingSDK.disableVideoCapture()
         }
@@ -429,7 +429,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         with(binding) {
             val isCameraEnabled = MeetingSDK.enableVideoCapture(
                 chooseDevicesLayout.videoInputSpinner.selectedItem.toString(),
-                chooseDevicesLayout.videoCodecSpinner.selectedItem.toString()
+                chooseDevicesLayout.videoCodecSpinner.selectedItem.toString(), true
             )
 
             if (isCameraEnabled) {
@@ -1052,7 +1052,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
                 setMessage(it.getString(R.string.camera_error_desc))
                 setPositiveButton(android.R.string.ok) { dialog, _ ->
                     // User clicked OK button
-                    com.visionable.meetingsdk.MeetingSDK.enableVideoCapture(currentCamera, currentResolution)
+                    com.visionable.meetingsdk.MeetingSDK.enableVideoCapture(currentCamera, currentResolution, true)
                     dialog.dismiss()
                 }
                 setNegativeButton(android.R.string.cancel) { dialog, _ ->
