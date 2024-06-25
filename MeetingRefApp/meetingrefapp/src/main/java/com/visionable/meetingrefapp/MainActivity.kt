@@ -1,10 +1,16 @@
 package com.visionable.meetingrefapp
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.Context
+import android.media.AudioManager
 import android.os.Bundle
-import android.os.Looper
+import android.os.Environment.DIRECTORY_DOCUMENTS
+import android.os.Environment.getExternalStoragePublicDirectory
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
@@ -12,9 +18,8 @@ import com.visionable.meetingrefapp.databinding.MainActivityBinding
 import com.visionable.meetingrefapp.fragments.MeetingFragment
 import com.visionable.meetingrefapp.fragments.SetUpFragment
 import com.visionable.meetingsdk.MeetingSDK
-import com.visionable.meetingsdk.interfaces.IJoinMeetingCompleteCallback
-import com.visionable.meetingsdk.interfaces.ITraceMessageCallback
 
+import org.json.JSONObject
 /**
  * Main Activity class that holds:
  * 1. Some of the relevant MeetingSDK calls
@@ -23,6 +28,7 @@ import com.visionable.meetingsdk.interfaces.ITraceMessageCallback
 class MainActivity : AppCompatActivity(), SdkListener {
 
     private lateinit var binding: MainActivityBinding
+    private lateinit var audioMgr: AudioManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +40,9 @@ class MainActivity : AppCompatActivity(), SdkListener {
         supportActionBar?.setDisplayShowTitleEnabled(false) // Hide app title
 
         // Initializes the Visionable MeetingSDK that is bound to your application context
-        MeetingSDK.initializeSDK(this.getApplicationContext())
+        MeetingSDK.initializeSDK(this)
+        Log.d("RONSTAG",MeetingSDK.getTimeZone())
+
         // Navigate to [SetUpFragment]
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
@@ -43,8 +51,25 @@ class MainActivity : AppCompatActivity(), SdkListener {
             }
         }
 
+        ActivityCompat.requestPermissions(/* activity = */ this, /* permissions = */
+            arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE),23);
+
+        val externalDirectory = getExternalStoragePublicDirectory(DIRECTORY_DOCUMENTS)
+        val loggingDir = externalDirectory?.absolutePath
+
+        MeetingSDK.setLogDirectory(loggingDir + "/visionable")
         MeetingSDK.enableCombinedLogs(true)
-        MeetingSDK.enableLogForwarding(true)
+        MeetingSDK.enableLogForwarding(false)
+
+        val result = MeetingSDK.deleteAllLogFiles()
+
+        MeetingSDK.enableActiveLogging("RefAppLog")
+
+        audioMgr = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioMgr.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        audioMgr.isSpeakerphoneOn = true;
+
+        MeetingSDK.setTraceLevel(MeetingSDK.DebugLevel.DBG3)
     }
 
     /**
@@ -53,7 +78,7 @@ class MainActivity : AppCompatActivity(), SdkListener {
      *
      * @param participantName - Display name for the participant joining
      */
-    override fun joinMeeting(participantName: String) {
+    override fun joinMeeting(server: String, meetingUUID: String, key: String?, participantName: String) {
         // Initialize MeetingFragment in order to set it as the MeetingSDK notification callback
         val meetingFragment = MeetingFragment()
         val setupFragment = supportFragmentManager.findFragmentById(R.id.container)
@@ -65,8 +90,8 @@ class MainActivity : AppCompatActivity(), SdkListener {
             hide(meetingFragment)
         }
 
-        MeetingSDK.setDelegate(null, Looper.getMainLooper())
-        MeetingSDK.joinMeeting(participantName) { joined ->
+        //MeetingSDK.setDelegate(null, Looper.getMainLooper())
+        MeetingSDK.joinMeeting(server,meetingUUID,key,"", participantName) { joined ->
             if (joined) {
                 // Remove SetUpFragment
                 setupFragment?.let { fragment ->
@@ -84,6 +109,75 @@ class MainActivity : AppCompatActivity(), SdkListener {
                 )
             }
         }
+    }
+
+    override fun joinMeetingWithToken(server: String, meetingUUID: String, token: String?, participantName: String) {
+        // Initialize MeetingFragment in order to set it as the MeetingSDK notification callback
+        val meetingFragment = MeetingFragment()
+        val setupFragment = supportFragmentManager.findFragmentById(R.id.container)
+
+        // Add the fragment in a hidden state in order to not disrupt UI
+        supportFragmentManager.commitNow {
+            setReorderingAllowed(true)
+            add(R.id.container, meetingFragment)
+            hide(meetingFragment)
+        }
+
+        //MeetingSDK.setDelegate(null, Looper.getMainLooper())
+
+        MeetingSDK.joinMeetingWithToken(server,meetingUUID,token,/*userUUID*/"",participantName) { joined ->
+            if (joined) {
+                // Remove SetUpFragment
+                setupFragment?.let { fragment ->
+                    supportFragmentManager.commit {
+                        show(meetingFragment)
+                        remove(fragment)
+                    }
+                }
+            } else {
+                // Remove MeetingFragment instance
+                supportFragmentManager.commit { remove(meetingFragment) }
+                showErrorModal(
+                    title = R.string.join_meeting_alert_title,
+                    message = R.string.init_meeting_alert_message
+                )
+            }
+        }
+    }
+
+    override fun joinMeetingWithTokenAndJWT(server: String, meetingUUID: String, token: String, jwt: String, participantName: String) {
+        // Initialize MeetingFragment in order to set it as the MeetingSDK notification callback
+        val meetingFragment = MeetingFragment()
+        val setupFragment = supportFragmentManager.findFragmentById(R.id.container)
+
+        // Add the fragment in a hidden state in order to not disrupt UI
+        supportFragmentManager.commitNow {
+            setReorderingAllowed(true)
+            add(R.id.container, meetingFragment)
+            hide(meetingFragment)
+        }
+
+        //MeetingSDK.setDelegate(null, Looper.getMainLooper())
+
+        MeetingSDK.joinMeetingWithTokenAndJWT(server,meetingUUID,token,jwt,participantName) { joined ->
+            if (joined) {
+                // Remove SetUpFragment
+                setupFragment?.let { fragment ->
+                    supportFragmentManager.commit {
+                        show(meetingFragment)
+                        remove(fragment)
+                    }
+                }
+            } else {
+                // Remove MeetingFragment instance
+                supportFragmentManager.commit { remove(meetingFragment) }
+                showErrorModal(
+                    title = R.string.join_meeting_alert_title,
+                    message = R.string.init_meeting_alert_message
+                )
+            }
+        }
+
     }
 
     /**

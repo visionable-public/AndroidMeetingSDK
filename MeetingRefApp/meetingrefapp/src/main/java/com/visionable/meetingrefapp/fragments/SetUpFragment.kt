@@ -13,6 +13,7 @@ import com.visionable.meetingrefapp.SdkListener
 import com.visionable.meetingrefapp.databinding.SetupFragmentBinding
 import com.visionable.meetingrefapp.persistence.MeetingPreferences
 import com.visionable.meetingsdk.MeetingSDK
+import com.visionable.meetingsdk.VisionableAPI
 
 /**
  * Set Up Fragment to input all of the relevant information and to start the meeting
@@ -22,12 +23,6 @@ class SetUpFragment : Fragment() {
 
     companion object {
         private val TAG = SetUpFragment::class.java.canonicalName
-
-        /* EDIT TEST VALUES HERE */
-        private const val TEST_NAME = "Pixel"
-        private const val TEST_SERVER = "mspears.visionable.io"
-        private const val TEST_MEETING = "0a43a7551-9975-46cf-915d-185a6d52dbc7"
-        /* ********************* */
     }
 
     private var _binding: SetupFragmentBinding? = null
@@ -75,20 +70,32 @@ class SetUpFragment : Fragment() {
         saveMeetingInfo()
 
         if (binding.joinMeetingLayout.meetingTokenCheckbox.isChecked) {
-            MeetingSDK.initializeMeetingWithToken(null, server, guid) { result ->
-                onMeetingInitialized(result, participantName)
+
+            // Use this code to authenticate with a hard coded id/password
+            /*
+            VisionableAPI.authenticate(server,"userID","password") { success, jwt ->
+                if (success) {
+                    VisionableAPI.initializeMeetingWithToken(server, guid, jwt) { result, server, token ->
+                        onMeetingInitializedWithTokenAndJWT(result,server,guid,token,jwt,participantName)
+                    }
+                }
+            }
+*/
+            // Use this code to join meeting as a guest
+            VisionableAPI.initializeMeetingWithToken(server, guid, null) { result, server, token ->
+                onMeetingInitializedWithToken(result, server, guid, token, participantName)
             }
         } else {
-            MeetingSDK.initializeMeeting(server, guid) { result ->
-                onMeetingInitialized(result, participantName)
+            VisionableAPI.initializeMeeting(server, guid) { result, v2resolvedServer, key ->
+                onMeetingInitialized(result,v2resolvedServer,guid,key,participantName)
             }
         }
     }
 
-    private fun onMeetingInitialized(result: Boolean, participantName: String) {
+    private fun onMeetingInitialized(result: Boolean, server: String, meetingUUID: String, key: String, participantName: String) {
         with(binding) {
             if (result) {
-                sdkListener?.joinMeeting(participantName)
+                sdkListener?.joinMeeting(server,meetingUUID,key,participantName)
             } else {
                 // Show error modal & set click listener to null to avoid crash
                 joinMeetingButton.apply {
@@ -104,6 +111,43 @@ class SetUpFragment : Fragment() {
         }
     }
 
+    private fun onMeetingInitializedWithToken(result: Boolean, server: String, meetingUUID: String, token: String, participantName: String) {
+        with(binding) {
+            if (result) {
+                sdkListener?.joinMeetingWithToken(server,meetingUUID,token,participantName)
+            } else {
+                // Show error modal & set click listener to null to avoid crash
+                joinMeetingButton.apply {
+                    revertAnimation()
+                    backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.dark_grey, null))
+                }
+
+                sdkListener?.showErrorModal(
+                    title = R.string.join_meeting_alert_title,
+                    message = R.string.init_meeting_alert_message
+                )
+            }
+        }
+    }
+
+    private fun onMeetingInitializedWithTokenAndJWT(result: Boolean, server: String, meetingUUID: String, token: String, jwt: String, participantName: String) {
+        with(binding) {
+            if (result) {
+                sdkListener?.joinMeetingWithTokenAndJWT(server,meetingUUID,token,jwt,participantName)
+            } else {
+                // Show error modal & set click listener to null to avoid crash
+                joinMeetingButton.apply {
+                    revertAnimation()
+                    backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.dark_grey, null))
+                }
+
+                sdkListener?.showErrorModal(
+                    title = R.string.join_meeting_alert_title,
+                    message = R.string.init_meeting_alert_message
+                )
+            }
+        }
+    }
     /**
      * Helper Function
      * Sets up binding click listeners for all of the relevant inputs

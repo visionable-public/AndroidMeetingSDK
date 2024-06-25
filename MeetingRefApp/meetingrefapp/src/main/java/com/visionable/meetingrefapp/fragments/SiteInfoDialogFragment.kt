@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment
 import com.visionable.meetingrefapp.data.VideoStreamItem
 import com.visionable.meetingrefapp.databinding.SiteInfoDialogBinding
 import com.visionable.meetingsdk.MeetingSDK
+import com.visionable.meetingsdk.ModeratorSDK
 import com.visionable.meetingsdk.VideoInfo
 
 /**
@@ -50,6 +51,7 @@ class SiteInfoDialogFragment(
             activeCheckbox.isChecked = videoInfo.isActive
             localCheckbox.isChecked = participantInfo.participant.isLocal
 
+            ModeratorSDK.sendPTZCommand(participantInfo.participant.uuid, "Android Front Camera","tilt_up");
             // Button Click Listeners
             closeBtn.setOnClickListener { dismiss() }
 
@@ -65,7 +67,7 @@ class SiteInfoDialogFragment(
                 // Hide the button if participant is local
                 if (participantInfo.participant.isLocal) visibility = View.GONE
                 setOnClickListener {
-                    MeetingSDK.disableVideoStream(participantInfo.participant, streamId)
+                    MeetingSDK.disableVideoStream(streamId)
                 }
             }
         }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -37,10 +38,11 @@ import com.visionable.meetingrefapp.recyclerview.adapters.NetworkCameraRecyclerV
 import com.visionable.meetingrefapp.recyclerview.adapters.ParticipantRecyclerViewAdapter
 import com.visionable.meetingrefapp.recyclerview.adapters.VideoRecyclerViewAdapter
 import com.visionable.meetingsdk.MeetingSDK
+import com.visionable.meetingsdk.ModeratorSDK
 import com.visionable.meetingsdk.Participant
 import com.visionable.meetingsdk.VideoView
-import com.visionable.meetingsdk.interfaces.INotificationCallback
-import com.visionable.meetingsdk.interfaces.ISwitchCameraCallback
+import com.visionable.meetingsdk.interfaces.MeetingSDKDelegate
+import com.visionable.meetingsdk.interfaces.ModeratorSDKDelegate
 
 /**
  * Meeting Fragment that holds all of the video stream cards, meeting tools bottom sheet, and
@@ -48,7 +50,7 @@ import com.visionable.meetingsdk.interfaces.ISwitchCameraCallback
  *
  * Second screen in the flow
  */
-class MeetingFragment : Fragment(), INotificationCallback {
+class MeetingFragment : Fragment(), MeetingSDKDelegate, ModeratorSDKDelegate {
 
     companion object {
         private val TAG = MeetingFragment::class.java.canonicalName
@@ -83,6 +85,8 @@ class MeetingFragment : Fragment(), INotificationCallback {
     private var audioOutputDevices: ArrayList<String> = ArrayList()
     private var videoDevices: ArrayList<String> = ArrayList()
     private var videoCodecs: Array<String> = arrayOf()
+    private var currentCamera: String = String()
+    private var currentResolution: String = String()
 
     private var isAudioEnabled = false
     private var isVideoEnabled = false
@@ -141,9 +145,10 @@ class MeetingFragment : Fragment(), INotificationCallback {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
+
         // Set as delegate
         MeetingSDK.setDelegate(this,Looper.getMainLooper())
-        MeetingSDK.enableCombinedLogs(true)
+        ModeratorSDK.setDelegate(this,Looper.getMainLooper())
     }
 
     /**
@@ -170,6 +175,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.participant_menu, menu)
     }
@@ -180,6 +186,7 @@ class MeetingFragment : Fragment(), INotificationCallback {
      * @param item
      * @return
      */
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.view_attendees -> {
@@ -304,10 +311,11 @@ class MeetingFragment : Fragment(), INotificationCallback {
      * @return
      */
     private fun toggleLocalVideo(device: String = "", codec: String = "", isEnabled: Boolean): Boolean {
-        return if (isEnabled) {
-            MeetingSDK.enableVideoCapture(device, codec, true)
+        if (isEnabled) {
+            currentResolution = codec
+            return MeetingSDK.enableVideoCapture(device,codec,false)
         } else {
-            MeetingSDK.disableVideoCapture()
+            return MeetingSDK.disableVideoCapture(device)
         }
     }
 
@@ -320,33 +328,31 @@ class MeetingFragment : Fragment(), INotificationCallback {
      * @param newCamera
      */
     private fun switchCamera(newCamera: String) {
-        MeetingSDK.switchCamera(newCamera, object : ISwitchCameraCallback {
-            override fun onCameraSwitched(p0: String?) {
-                // Load codec options for new camera
-                videoCodecs = MeetingSDK.getSupportedVideoSendResolutions(newCamera)
+        if (currentCamera.length > 0) {
+            // Disable current camera
+            MeetingSDK.disableVideoCapture(currentCamera)
+        }
 
-                // New Camera will utilize same codec as last one
-                val lastUsedCodec = MeetingSDK.getVideoResolution()
+        // Now enable new camera
+        if (MeetingSDK.enableVideoCapture(newCamera,currentResolution,false)) {
+            currentCamera = newCamera
+            videoCodecs = MeetingSDK.getSupportedVideoSendResolutions(newCamera)
 
-                createSpinnerAdapter(videoCodecs)?.let { adapter ->
-                    (binding.meetingToolsLayout.videoCodecSpinner as? AutoCompleteTextView)?.apply {
-                        setAdapter(adapter)
+            // New Camera will utilize same codec as last one
+            val lastUsedCodec = currentResolution
 
-                        // Set text using last used codec or, if not found, first available
-                        setText(
-                            videoCodecs.firstOrNull { it == lastUsedCodec } ?: videoCodecs[0],
-                            false
-                        )
-                    }
+            createSpinnerAdapter(videoCodecs)?.let { adapter ->
+                (binding.meetingToolsLayout.videoCodecSpinner as? AutoCompleteTextView)?.apply {
+                    setAdapter(adapter)
+
+                    // Set text using last used codec or, if not found, first available
+                    setText(
+                        videoCodecs.firstOrNull { it == lastUsedCodec } ?: videoCodecs[0],
+                        false
+                    )
                 }
             }
-
-            override fun onCameraSwitchFailed() {
-                sdkListener?.showErrorModal(
-                    title = R.string.change_camera_alert_title
-                )
-            }
-        })
+        }
     }
 
     /**
@@ -359,7 +365,10 @@ class MeetingFragment : Fragment(), INotificationCallback {
      * for that camera
      */
     private fun changeVideoResolution(resolution: String) {
-        if (!MeetingSDK.changeVideoResolution(resolution)) {
+        MeetingSDK.disableVideoCapture(currentCamera)
+        if (MeetingSDK.enableVideoCapture(currentCamera,resolution,false)) {
+            currentResolution = resolution
+        } else {
             sdkListener?.showErrorModal(
                 title = R.string.resolution_alert_title,
                 message = R.string.resolution_alert_message
@@ -429,7 +438,8 @@ class MeetingFragment : Fragment(), INotificationCallback {
         with(binding) {
             val isCameraEnabled = MeetingSDK.enableVideoCapture(
                 chooseDevicesLayout.videoInputSpinner.selectedItem.toString(),
-                chooseDevicesLayout.videoCodecSpinner.selectedItem.toString(), true
+                chooseDevicesLayout.videoCodecSpinner.selectedItem.toString(),
+                true
             )
 
             if (isCameraEnabled) {
@@ -881,6 +891,14 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
+    override fun meetingToken(p0: String?) {
+        Log.d(TAG,"meetingToken: decoded token: $p0");
+    }
+
+    override fun meetingDisconnected() {
+        Log.d(TAG,"meetingDisconnected received!")
+    }
+
     override fun participantVideoAdded(p0: Participant?, p1: String?) {
         p0?.let { participant ->
             Log.d(TAG,"participantVideoAdded ${participant.displayName}")
@@ -893,9 +911,10 @@ class MeetingFragment : Fragment(), INotificationCallback {
 
     override fun participantVideoUpdated(p0: Participant?, p1: String?) {
         p0?.let { participant ->
-            Log.d(TAG,"ms participantVideoUpdated: ${participant.displayName}")
+            Log.d(TAG, "ms participantVideoUpdated: ${participant.displayName}")
         }
     }
+
 
     override fun participantVideoViewCreated(p0: Participant?, p1: VideoView?) {
         p0?.let { participant ->
@@ -939,7 +958,6 @@ class MeetingFragment : Fragment(), INotificationCallback {
             }
         }
     }
-
 
     override fun participantRemoved(p0: Participant?) {
         p0?.let { participant ->
@@ -1029,12 +1047,25 @@ class MeetingFragment : Fragment(), INotificationCallback {
         println("binaryPlaybackfailed: $p0")
     }
 
+    override fun participantNetworkQuality(p0: Participant?, p1: String?, p2: Int) {
+        Log.d(TAG,"participantNetworkQuality: $p0 $p1 $p2")
+    }
+
+    override fun networkQuality(p0: Int) {
+        Log.d(TAG,"networkQuality: $p0")
+    }
+
+    override fun connectionStatus(p0: Int) {
+        Log.d(TAG,"connectionStatus: $p0")
+    }
+
+
     override fun videoError(errorName: String, errorDescription: String){
         Log.e(TAG,"videoError $errorName : $errorDescription")
         val currentCamera = binding.chooseDevicesLayout.videoInputSpinner.selectedItem.toString()
         val currentResolution = binding.chooseDevicesLayout.videoCodecSpinner.selectedItem.toString()
         if (currentCamera.equals(errorDescription)) {
-            MeetingSDK.disableVideoCapture()
+            MeetingSDK.disableVideoCapture(currentCamera)
             showCameraError(currentCamera, currentResolution)
         }
     }
@@ -1045,7 +1076,11 @@ class MeetingFragment : Fragment(), INotificationCallback {
         }
     }
 
-    fun showCameraError(currentCamera: String, currentResolution : String){
+    override fun deviceListUpdated(p0: String?) {
+        Log.d(TAG,"deviceListUpdated: $p0")
+    }
+
+        fun showCameraError(currentCamera: String, currentResolution : String){
         activity?.let {
             AlertDialog.Builder(it).apply {
                 setTitle(it.getString(R.string.camera_error))
