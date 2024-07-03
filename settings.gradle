@@ -1,3 +1,0 @@
-include ':MeetingSDK'
-include ':MeetingRefApp'
-rootProject.name = "ANDROID_PUBLIC"
